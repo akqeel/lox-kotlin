@@ -55,7 +55,7 @@ class Lox {
         }
 
         @JvmStatic
-        private fun error(
+        fun error(
             line: Int,
             message: String,
         ) = report(line, "", message)
