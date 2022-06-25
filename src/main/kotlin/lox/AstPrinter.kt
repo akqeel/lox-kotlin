@@ -4,22 +4,6 @@ import lox.Expr.Visitor
 
 class AstPrinter: Visitor<String> {
 
-    companion object {
-        @JvmStatic fun main(args: Array<String>) {
-            val expression: Expr = Expr.Binary(
-                Expr.Unary(
-                    Token(TokenType.MINUS, "-", null, 1),
-                    Expr.Literal(123)
-                ),
-                Token(TokenType.STAR, "*", null, 1),
-                Expr.Grouping(
-                    Expr.Literal(45.67)
-                )
-            )
-            println(AstPrinter().print(expression))
-        }
-    }
-
     fun print(expr: Expr) = expr.accept(this)
 
     override fun visitBinaryExpr(expr: Expr.Binary): String {
