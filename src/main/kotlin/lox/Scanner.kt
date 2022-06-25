@@ -1,5 +1,7 @@
-import Lox.Companion.error
-import TokenType.*
+package lox
+
+import lox.Lox.Companion.error
+import lox.TokenType.*
 
 
 data class Scanner(

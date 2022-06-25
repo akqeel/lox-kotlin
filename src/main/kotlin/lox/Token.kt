@@ -1,3 +1,5 @@
+package lox
+
 data class Token(
     var type: TokenType? = null,
     var lexeme: String? = null,
