@@ -1,4 +1,4 @@
-package tool;
+package lox;
 
 import java.util.List;
 import lox.Token;

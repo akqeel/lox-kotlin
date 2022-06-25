@@ -27,7 +27,7 @@ class GenerateAst {
         @JvmStatic private fun defineAst(outputDir: String, baseName: String, types: List<String>) {
             val path = "$outputDir/$baseName.java"
             val writer = PrintWriter(path, "UTF-8")
-            writer.println("package tool;")
+            writer.println("package lox;")
             writer.println()
             writer.println("import java.util.List;")
             writer.println("import lox.Token;")
