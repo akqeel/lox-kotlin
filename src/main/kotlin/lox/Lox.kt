@@ -13,6 +13,7 @@ class Lox {
 
     companion object {
         @JvmStatic private var hadError = false
+        @JvmStatic private var hadRuntimeError = false
 
         @JvmStatic fun main(args: Array<String>) {
             if (args.size > 1) {
@@ -54,7 +55,7 @@ class Lox {
 
             if(hadError) return
 
-            println(AstPrinter().print(expr))
+            println(Interpreter().interpret(expr))
         }
 
         @JvmStatic
@@ -77,6 +78,12 @@ class Lox {
         ) {
             println("[line $line] Error$where: $message")
             hadError = true
+        }
+
+        @JvmStatic
+        fun runtimeError(error: RuntimeError) {
+            System.err.println("""${error.message}[line ${error.token.line}]""".trimIndent())
+            hadRuntimeError = true
         }
 
     }
