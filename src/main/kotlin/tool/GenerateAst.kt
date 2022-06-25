@@ -18,7 +18,7 @@ class GenerateAst {
             defineAst(outputDir, "Expr", arrayListOf(
                 "Binary   : Expr left, Token operator, Expr right",
                 "Grouping : Expr expression",
-                "Literal  : Object value",
+                "Literal  : @Nullable Object value",
                 "Unary    : Token operator, Expr right"
             ))
         }

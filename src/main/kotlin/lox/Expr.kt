@@ -20,7 +20,7 @@ abstract class Expr {
         }
     }
 
-    class Literal internal constructor(val value: Any) : Expr() {
+    class Literal internal constructor(val value: Any?) : Expr() {
         override fun <R> accept(visitor: Visitor<R>): R {
             return visitor.visitLiteralExpr(this)
         }

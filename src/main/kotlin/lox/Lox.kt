@@ -49,12 +49,19 @@ class Lox {
         private fun run(source: String) {
             val scanner = Scanner(source)
             val tokens: List<Token> = scanner.scanTokens()
+            val parser = Parser(tokens)
+            val expr = parser.parse() ?: return
 
-            // For now, just print the tokens.
-            for (token in tokens) {
-                println(token)
-            }
+            if(hadError) return
+
+            println(AstPrinter().print(expr))
         }
+
+        @JvmStatic
+        fun error(
+            token: Token,
+            message: String,
+        ) = report(token.line, "", message)
 
         @JvmStatic
         fun error(
@@ -63,8 +70,9 @@ class Lox {
         ) = report(line, "", message)
 
         @JvmStatic
-        private fun report(
-            line: Int, where: String,
+        fun report(
+            line: Int,
+            where: String,
             message: String
         ) {
             println("[line $line] Error$where: $message")
