@@ -1,6 +1,6 @@
 package lox
 
-class Interpreter: Expr.Visitor<Any?> {
+class Interpreter : Expr.Visitor<Any?> {
 
     fun interpret(expression: Expr?) {
         try {
@@ -15,49 +15,98 @@ class Interpreter: Expr.Visitor<Any?> {
         val left = evaluate(expr.left)
         val right = evaluate(expr.right)
 
-        return when(expr.operator.type) {
-            TokenType.MINUS -> {
-                checkNumberOperands(expr.operator, left, right)
-                (left as Double) - (right as Double)
-            }
-            TokenType.SLASH -> {
-                checkNumberOperands(expr.operator, left, right)
-                (left as Double) / (right as Double)
-            }
-            TokenType.STAR -> {
-                checkNumberOperands(expr.operator, left, right)
-                (left as Double) * (right as Double)
-            }
-            TokenType.PLUS -> {
+        return when (expr.operator.type) {
+            TokenType.MINUS -> visitBinaryExprMinus(expr, left, right)
+            TokenType.SLASH -> visitBinaryExprSlash(expr, left, right)
+            TokenType.STAR -> visitBinaryExprStar(expr, left, right)
+            TokenType.PLUS -> visitBinaryExprPlus(expr, left, right)
 
-                checkNumberOperands(expr.operator, left, right)
-                if (left is Double && right is Double) { left + right }
-                else if (left is String && right is String) { left + right }
-                else null
-            }
+            TokenType.GREATER -> visitBinaryExprGreater(expr, left, right)
+            TokenType.GREATER_EQUAL -> visitBinaryExprGreaterEqual(expr, left, right)
+            TokenType.LESS -> visitBinaryExprLess(expr, right, left)
+            TokenType.LESS_EQUAL -> visitBinaryExprLessEqual(expr, right, left)
 
-            TokenType.GREATER -> {
-                checkNumberOperands(expr.operator, left, right)
-                (left as Double) > (right as Double)
-            }
-            TokenType.GREATER_EQUAL -> {
-                checkNumberOperands(expr.operator, left, right)
-                (left as Double) >= (right as Double)
-            }
-            TokenType.LESS -> {
-                checkNumberOperands(expr.operator, left, right)
-                (left as Double) < (right as Double)
-            }
-            TokenType.LESS_EQUAL -> {
-                checkNumberOperands(expr.operator, left, right)
-                (left as Double) <= (right as Double)
-            }
-
-            TokenType.BANG_EQUAL -> { !isEqual(left, right) }
-            TokenType.EQUAL_EQUAL -> { isEqual(left, right) }
+            TokenType.BANG_EQUAL -> !isEqual(left, right)
+            TokenType.EQUAL_EQUAL -> isEqual(left, right)
 
             else -> null
         }
+    }
+
+    private fun visitBinaryExprMinus(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any {
+        checkNumberOperands(expr.operator, left, right)
+        return (left as Double) - (right as Double)
+    }
+
+    private fun visitBinaryExprSlash(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any {
+        checkNumberOperands(expr.operator, left, right)
+        return (left as Double) / (right as Double)
+    }
+
+    private fun visitBinaryExprStar(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any {
+        checkNumberOperands(expr.operator, left, right)
+        return (left as Double) * (right as Double)
+    }
+
+    private fun visitBinaryExprPlus(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any? {
+        checkNumberOperands(expr.operator, left, right)
+        return if (left is Double && right is Double) {
+            left + right
+        } else if (left is String && right is String) {
+            left + right
+        } else null
+    }
+
+    private fun visitBinaryExprGreater(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any {
+        checkNumberOperands(expr.operator, left, right)
+        return (left as Double) > (right as Double)
+    }
+
+    private fun visitBinaryExprGreaterEqual(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any {
+        checkNumberOperands(expr.operator, left, right)
+        return (left as Double) >= (right as Double)
+    }
+
+    private fun visitBinaryExprLess(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any {
+        checkNumberOperands(expr.operator, left, right)
+        return (left as Double) < (right as Double)
+    }
+
+    private fun visitBinaryExprLessEqual(
+        expr: Expr.Binary,
+        left: Any?,
+        right: Any?,
+    ): Any {
+        checkNumberOperands(expr.operator, left, right)
+        return (left as Double) <= (right as Double)
     }
 
     override fun visitGroupingExpr(expr: Expr.Grouping): Any? {
@@ -71,7 +120,7 @@ class Interpreter: Expr.Visitor<Any?> {
     override fun visitUnaryExpr(expr: Expr.Unary): Any? {
         val right = evaluate(expr.right)
 
-        return when(expr.operator.type) {
+        return when (expr.operator.type) {
             TokenType.BANG -> !isTruthy(right)
             TokenType.MINUS -> -1 * (right as Double)
             else -> null
