@@ -32,7 +32,7 @@ class GenerateAst {
             writer.println("import java.util.List;")
             writer.println("import lox.Token;")
             writer.println()
-            writer.println("abstract class $baseName {")
+            writer.println("public abstract class $baseName {")
             defineVisitor(writer, baseName, types)
             defineAstClasses(baseName, types, writer)
             writer.println();
@@ -51,7 +51,7 @@ class GenerateAst {
             for (type: String in types) {
                 val typeName =
                     type.split(":".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()[0].trim { it <= ' ' }
-                writer.println("    R visit" + typeName + baseName + "(" + typeName + " " + baseName.lowercase(Locale.getDefault()) + ");")
+                writer.println("    public R visit" + typeName + baseName + "(" + typeName + " " + baseName.lowercase(Locale.getDefault()) + ");")
             }
             writer.println("  }")
         }
