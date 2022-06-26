@@ -1,4 +1,4 @@
-# lox-kotlin
+# Lox-Kotlin
 Lox programming language (from the book [Crafting Interpreters](https://craftinginterpreters.com/)) written in Kotlin.
 
 # Project summary
